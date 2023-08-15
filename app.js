@@ -17,7 +17,7 @@ app.use(cookieParser())
 
 //In the below code line I'm creating the cityrealname instance of the city class
 var cityrealname = new city();
-
+let responseToClient;
 
 async function fetchData() {
 let cityNameVariable;
@@ -30,9 +30,11 @@ await cityrealname.getName().then(() => {
   try {
     const apiKey = process.env.WEATHER_KEY;
     const city_query = cityNameVariable; //city string to call the lunar phase
-    const response = await axios.get(`http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city_query}&aqi=no`);
+    const response = await axios.get(`http://api.weatherapi.com/v1/astronomy.json?key=${apiKey}&q=${city_query}&aqi=no`);
     const { data } = response;
-    console.log(data);
+    //console.log(data);
+    responseToClient = data
+    console.log(responseToClient)
 
   } catch (error) {
     console.error(error.message);
@@ -41,16 +43,20 @@ await cityrealname.getName().then(() => {
 
 fetchData();
 
-router.get('/', async (req, res) => {
-
+router.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname + '/public/index.html'))
 });
 
-router.get('/public/index.html', (req, res) => {
-  res.sendFile(path.join(__dirname + '/public/index.html'))
+router.get('/fetch-data', (req, res) => {
+  res.send(responseToClient)
+  var console = responseToClient
+  console.log(console)
 })
 
+
 //add the router
-app.use('/', router);
+
+//router.use('/', router);
 app.use(express.static(__dirname + '/public'));
 
 
