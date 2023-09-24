@@ -19,39 +19,29 @@ app.use(cookieParser())
 var cityrealname = new city();
 let responseToClient;
 
-async function fetchData() {
+app.get('/api', async (req, res) => {
 let cityNameVariable;
 
   //afterwards, i call the getName() method to retrieve the city's name.
 await cityrealname.getName().then(() => {
   cityNameVariable = cityrealname.cityName;
-  
-});
+  });
   try {
     const apiKey = process.env.WEATHER_KEY;
     const city_query = cityNameVariable; //city string to call the lunar phase
     const response = await axios.get(`http://api.weatherapi.com/v1/astronomy.json?key=${apiKey}&q=${city_query}&aqi=no`);
     const { data } = response;
-    //console.log(data);
     responseToClient = data
     console.log(responseToClient)
+    res.json({message: responseToClient})
 
   } catch (error) {
     console.error(error.message);
   }
-}
-
-fetchData();
-
-router.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname + '/public/index.html'))
 });
 
-router.get('/fetch-data', (req, res) => {
-  res.send(responseToClient)
-  var console = responseToClient
-  console.log(console)
-})
+
+
 
 
 //add the router
@@ -60,8 +50,6 @@ router.get('/fetch-data', (req, res) => {
 app.use(express.static(__dirname + '/public'));
 
 
+app.listen(3001);
 
-
-app.listen(process.env.port || 3000);
-
-console.log('Running at Port 3000');
+console.log('Running at Port 3001');
