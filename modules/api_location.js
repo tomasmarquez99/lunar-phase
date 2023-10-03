@@ -1,9 +1,7 @@
 const express = require('express');
-const cookieParser = require('cookie-parser');
 const axios = require('axios');
 
 const app = express();
-app.use(cookieParser());
 
 //here I'm creating the city class, to retrieve the city name using the Geoapify API. 
 //I'm also exporting the city class so I can call the class is app.js
